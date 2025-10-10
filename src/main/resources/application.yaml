@@ -9,13 +9,47 @@ spring:
     username: root
     password: 
     driver-class-name: com.mysql.cj.jdbc.Driver
-
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: nguyenquanglinh0509@gmail.com
+    password: aoou cjxq wgoi qsrz
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls.enable: true
+          starttls.required: true
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
-    database-platform: org.hibernate.dialect.MySQL8Dialect
+    # properties:
+    #   hibernate:
+    #     format_sql: true # format SQL cho dễ đọc
+    # open-in-view: false  # tránh warning + tốt cho REST API
+    # database-platform: org.hibernate.dialect.MySQL8Dialect
+  ai:
+    openai:
+      api-key: AIzaSyAV4D-ic8ind-gMhxxdkexMj6YCT_j94Ao
+      base-url: https://generativelanguage.googleapis.com/v1beta/openai/
+      chat:
+        options:
+          model: gemini-2.0-flash
+    chat:
+      memory:
+        repository:
+          jdbc:
+            initialize-schema: always
+
+
+
 jwt:
   signerKey: bvkfSG5tgcc6kHcMWz6VpgyEjCmg16w8EzZv5mPs3KT4Tt1lS3AhkkOBE3oabTJ8
-  vaild-duration: 1800
+  vaild-duration: 18000
   refresh-duration: 86400
+logging:
+  level:
+    spring:
+      apo:
+        demotest: DEBUG

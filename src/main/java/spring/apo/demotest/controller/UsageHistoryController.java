@@ -4,7 +4,9 @@ package spring.apo.demotest.controller;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,6 +34,14 @@ public class UsageHistoryController {
 
         return ApiResponse.<UsageHistory>builder()
                 .data(usageService.calculateAndSave(request))
+                .build(); 
+    }
+    @PutMapping("/usage/{id}")
+    public ApiResponse<UsageHistory> updateUsage(@PathVariable("id") Long id,@RequestBody @Valid UsageHistoryRequest request) {
+        log.info("addUsage");
+
+        return ApiResponse.<UsageHistory>builder()
+                .data(usageService.calculateUpdate(id, request))
                 .build(); 
     }
     @GetMapping

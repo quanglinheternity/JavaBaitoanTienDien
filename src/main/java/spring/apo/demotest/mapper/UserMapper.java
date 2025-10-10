@@ -22,12 +22,16 @@ public interface UserMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "usageHistories", ignore = true)
     @Mapping(target = "role", constant = "USER")
+    @Mapping(target = "deleted", ignore = true)
+    @Mapping(target = "deletedAt", ignore = true)
     AppUser toUser(UserCreateRequest request);  
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "usageHistories", ignore = true)
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "username", ignore = true)
+    @Mapping(target = "deleted", ignore = true)
+    @Mapping(target = "deletedAt", ignore = true)
     void updateAppUserFromRequest(UserUpdateRequest request, @MappingTarget AppUser user);
 
     

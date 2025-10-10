@@ -16,6 +16,7 @@ public enum ErrorCode {
     TOKEN_EXPIRED(2003, "Token đã hết hạn", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(2004, "Bạn không có quyền truy cập", HttpStatus.FORBIDDEN),
 
+    USAGE_ALREADY_EXISTS(1100, "Người đùng đã có số tiền trong tháng", HttpStatus.BAD_REQUEST),
     USER_ALREADY_DELETED(1100, "Người dùng được xóa", HttpStatus.BAD_REQUEST),
     USER_NOT_DELETED(1100, "Người dùng chưa bị xoá", HttpStatus.BAD_REQUEST),
     USER_ALREADY_EXISTS(1101, "Người dùng đã tồn tại", HttpStatus.BAD_REQUEST),
@@ -40,6 +41,7 @@ public enum ErrorCode {
     DATE_INVALID_FORMAT(1010, "Ngày phải theo định dạng yyyy-MM-dd", HttpStatus.BAD_REQUEST),
     KWH_REQUIRED(1011, "Số điện không được để trống", HttpStatus.BAD_REQUEST),
     KWH_MUST_BE_GREATER_THAN_ZERO(1012, "Số điện phải lớn hơn 0", HttpStatus.BAD_REQUEST),
+    USAGE_NOT_FOUND(1013, "Tháng số điện không tồn tại", HttpStatus.NOT_FOUND),
     ;
     private int code;
     private String message;

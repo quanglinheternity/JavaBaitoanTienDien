@@ -55,7 +55,7 @@ public class SecurityConfig {
         return httpSecurity.build();
     }
 
-    @Bean 
+    @Bean // dùng để cho file khác gọi với nhau
     public CorsFilter corsFilter() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 

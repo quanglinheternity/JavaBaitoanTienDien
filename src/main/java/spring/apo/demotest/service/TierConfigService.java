@@ -25,6 +25,7 @@ import spring.apo.demotest.repository.TierConfigRepository;
 @Slf4j
 @PreAuthorize("hasRole('ADMIN')") 
 public class TierConfigService {
+    
     TierConfigRepository tierConfigRepository;
     TierConfigMapper tierConfigMapper;
     public TierConfigResponse createTierConfig(TierConfigCreateRequest request) {

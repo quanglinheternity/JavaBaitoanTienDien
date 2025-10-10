@@ -70,7 +70,10 @@ public class UserService {
         return response;
     }
     public UserResponse getMyInfo() {
-
+        log.debug("Đang gọi API...");   // chỉ hiện khi level <= DEBUG
+            log.info("App khởi động xong"); // hiện khi level <= INFO
+            log.warn("Dữ liệu thiếu field"); // hiện khi level <= WARN
+            log.error("Không kết nối được DB"); // luôn hiện khi level <= ERROR
         var conText = SecurityContextHolder.getContext();
         String name = conText.getAuthentication().getName();
 

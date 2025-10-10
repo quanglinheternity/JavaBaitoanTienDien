@@ -1,5 +1,7 @@
 package spring.apo.demotest.mapper;
 
+import java.util.List;
+
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -22,4 +24,6 @@ public interface TierConfigMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "tierName", ignore = true)
     void updateTierConfig(@MappingTarget TierConfig target,  TierConfigUpdateRequest request);
+
+    List<TierConfigResponse> toResponseList(List<TierConfig> tierConfigs);
 }

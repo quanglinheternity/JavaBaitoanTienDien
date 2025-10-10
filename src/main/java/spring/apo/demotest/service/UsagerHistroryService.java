@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -34,9 +35,18 @@ public class UsagerHistroryService {
     public UsageHistory calculateAndSave(UsageHistoryRequest request) {
         AppUser user = appUserRepository.findById(request.getUserID())
             .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        LocalDate date = LocalDate.parse(request.getDate());
+
+        // Xác định đầu và cuối tháng
+        LocalDate startOfMonth = date.withDayOfMonth(1);
+        LocalDate endOfMonth = date.withDayOfMonth(date.lengthOfMonth());
+
+        // Kiểm tra nếu tháng đó đã tồn tại
+        if (usageHistroryRepository.existsByUserAndUsageDateBetween(user, startOfMonth, endOfMonth)) {
+            throw new AppException(ErrorCode.USAGE_ALREADY_EXISTS); // Tạo mã lỗi tương ứng
+        }
         List<TierConfig> tierConfigs = tierConfigRepository.findAllByOrderByMinValueAsc();
         int kwh = request.getKwh();
-        LocalDate date = LocalDate.parse(request.getDate()) ;
         BigDecimal total = BigDecimal.ZERO;
         int remaining = kwh;
          for (TierConfig tier : tierConfigs) {
@@ -58,6 +68,51 @@ public class UsagerHistroryService {
         user.getUsageHistories().add(usage); 
         return usageHistroryRepository.save(usage);
     }
+    @PreAuthorize("hasRole('ADMIN')")
+    @Transactional
+    public UsageHistory calculateUpdate(Long id, UsageHistoryRequest request) {
+        UsageHistory usageHistory = usageHistroryRepository.findById(id)
+            .orElseThrow(() -> new AppException(ErrorCode.USAGE_NOT_FOUND));
+
+         AppUser user = usageHistory.getUser(); // user liên quan đến bản ghi
+
+        LocalDate date = LocalDate.parse(request.getDate());
+
+        LocalDate startOfMonth = date.withDayOfMonth(1);
+        LocalDate endOfMonth = date.withDayOfMonth(date.lengthOfMonth());
+
+        boolean existsOtherInMonth = usageHistroryRepository
+            .findByUserAndUsageDateBetween(user, startOfMonth, endOfMonth)
+            .stream()
+            .anyMatch(u -> !u.getId().equals(id));
+
+        if (existsOtherInMonth) {
+            throw new AppException(ErrorCode.USAGE_ALREADY_EXISTS); 
+        }
+        List<TierConfig> tierConfigs = tierConfigRepository.findAllByOrderByMinValueAsc();
+        int kwh = request.getKwh();
+        BigDecimal total = BigDecimal.ZERO;
+        int remaining = kwh;
+
+        for (TierConfig tier : tierConfigs) {
+            int tierMin = tier.getMinValue();
+            int tierMax = tier.getMaxValue() != null ? tier.getMaxValue() : Integer.MAX_VALUE;
+            int usageInTier = Math.min(remaining, tierMax - tierMin + 1);
+            if (usageInTier > 0) {
+                total = total.add(tier.getPrice().multiply(BigDecimal.valueOf(usageInTier)));
+                remaining -= usageInTier;
+            }
+            if (remaining <= 0) break;
+        }
+
+        usageHistory.setUsageDate(date);
+        usageHistory.setKwh(kwh);
+        usageHistory.setAmount(total);
+
+        return usageHistroryRepository.save(usageHistory);
+    }
+
+
     @PreAuthorize("hasRole('ADMIN')") 
     public List<UsageHistory> getAllUsageHistories() {
         
