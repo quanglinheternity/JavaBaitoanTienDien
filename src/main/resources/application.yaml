@@ -35,7 +35,7 @@ spring:
     # database-platform: org.hibernate.dialect.MySQL8Dialect
   ai:
     openai:
-      api-key: AIzaSyCWas065xHWpQs3o643GB85EtZb3t_ib_s
+      api-key: API_KEY
       base-url: https://generativelanguage.googleapis.com/v1beta/openai/
       chat:
         options:
@@ -50,7 +50,7 @@ image:
   upload-dir: D:\hocJava\demotest\upload
 
 jwt:
-  signerKey: API_KEY
+  signerKey: bvkfSG5tgcc6kHcMWz6VpgyEjCmg16w8EzZv5mPs3KT4Tt1lS3AhkkOBE3oabTJ8
   vaild-duration: 18000
   refresh-duration: 86400
 logging:

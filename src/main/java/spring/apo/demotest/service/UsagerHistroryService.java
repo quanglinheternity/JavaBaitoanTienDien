@@ -121,7 +121,7 @@ public class UsagerHistroryService {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         // Lấy AppUser từ DB
-        AppUser currentUser = appUserRepository.findByUsername(username)
+        AppUser currentUser = appUserRepository.findByUsernameAndDeletedFalse(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
         return usageHistroryRepository.findAllByUserId(currentUser.getId());

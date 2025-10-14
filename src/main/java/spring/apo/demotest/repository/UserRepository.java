@@ -12,8 +12,9 @@ import spring.apo.demotest.entity.AppUser;
 @Repository
 public interface UserRepository extends JpaRepository<AppUser, String> {
     boolean existsByUsername(String username);
-
+    // @Query("SELECT u FROM AppUser u WHERE u.username = :username AND u.deleted = false")
     Optional<AppUser> findByUsername(String username);
+    Optional<AppUser> findByUsernameAndDeletedFalse(String username);
     @Query("SELECT DISTINCT u FROM AppUser u LEFT JOIN FETCH u.usageHistories")
     List<AppUser> findAllWithUsageHistories();
 

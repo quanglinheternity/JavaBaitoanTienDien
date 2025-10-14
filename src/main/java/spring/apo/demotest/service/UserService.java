@@ -135,7 +135,7 @@ public class UserService {
         var conText = SecurityContextHolder.getContext();
         String name = conText.getAuthentication().getName();
 
-        AppUser user = userRepository.findByUsername(name).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        AppUser user = userRepository.findByUsernameAndDeletedFalse(name).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
         return userMapper.toUserResponse(user);
     }
