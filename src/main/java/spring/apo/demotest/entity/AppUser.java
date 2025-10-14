@@ -50,7 +50,11 @@ public class AppUser {
     String firstName;
     String lastName;
     LocalDate birthDate;
+    String profileImage;
     String role;
+    @Builder.Default
+    @Column(nullable = false)
+    boolean verified = false;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     @Builder.Default  // Thêm dòng này

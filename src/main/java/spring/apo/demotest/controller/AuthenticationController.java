@@ -2,9 +2,11 @@ package spring.apo.demotest.controller;
 
 import java.text.ParseException;
 
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nimbusds.jose.JOSEException;
@@ -54,4 +56,15 @@ public class AuthenticationController {
         authenticationService.logOut(request);
         return ApiResponse.<Void>builder().message("Đăng xuất thành công").build();
     }
+    @PostMapping("{userId}/verify")
+    ApiResponse<Void> verifyCode(@PathVariable(value = "userId") String userId, @RequestParam String code) {
+        String result = authenticationService.verifyCode(userId, code);
+        return ApiResponse.<Void>builder().code(1000).message(result).build();
+    }
+    @PostMapping("{userId}/resend")
+    ApiResponse<Void> resendCode(@PathVariable(value = "userId") String userId) {
+        String result = authenticationService.restVerificationCode(userId);
+        return ApiResponse.<Void>builder().code(1000).message(result).build();
+    }
+
 }   

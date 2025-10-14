@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Xác minh tài khoản</title>
+</head>
+<body style="font-family: Arial, sans-serif; color: #333;">
+  <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+    <h2 style="color: #007bff;">Xin chào, <span th:text="${name}">Người dùng</span>!</h2>
+
+    <p>Cảm ơn bạn đã đăng ký tại <b>ITS</b>.</p>
+    <p>Mã xác minh của bạn là:</p>
+    <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; text-align: center;">
+      <h3 style="color: #28a745;" th:text="${code}">123456</h3>
+    </div>
+
+    <p>Nếu bạn không thực hiện hành động này, vui lòng bỏ qua email này.</p>
+    <hr>
+    <p style="font-size: 12px; color: #888;">Trân trọng,<br>Đội ngũ ITS</p>
+  </div>
+</body>
+</html>

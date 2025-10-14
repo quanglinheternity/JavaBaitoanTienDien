@@ -22,4 +22,5 @@ public class UserUpdateRequest {
     String firstName;
     String lastName;
     LocalDate birthDate;
+    String profileImage;
 }

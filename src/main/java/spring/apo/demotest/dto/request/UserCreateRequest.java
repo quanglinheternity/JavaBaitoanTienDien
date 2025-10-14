@@ -27,4 +27,5 @@ public class UserCreateRequest {
     String firstName;
     String lastName;
     LocalDate birthDate;
+    String profileImage;
 }

@@ -37,13 +37,11 @@ public class UsagerHistroryService {
             .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
         LocalDate date = LocalDate.parse(request.getDate());
 
-        // Xác định đầu và cuối tháng
         LocalDate startOfMonth = date.withDayOfMonth(1);
         LocalDate endOfMonth = date.withDayOfMonth(date.lengthOfMonth());
 
-        // Kiểm tra nếu tháng đó đã tồn tại
         if (usageHistroryRepository.existsByUserAndUsageDateBetween(user, startOfMonth, endOfMonth)) {
-            throw new AppException(ErrorCode.USAGE_ALREADY_EXISTS); // Tạo mã lỗi tương ứng
+            throw new AppException(ErrorCode.USAGE_ALREADY_EXISTS); 
         }
         List<TierConfig> tierConfigs = tierConfigRepository.findAllByOrderByMinValueAsc();
         int kwh = request.getKwh();

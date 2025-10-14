@@ -14,6 +14,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EmailRequest {
     String to;
-    String subject;
-    String message;
+    String name;
+    String code;
 }

@@ -2,6 +2,7 @@ package spring.apo.demotest.service;
 
 import java.text.ParseException;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.UUID;
@@ -22,6 +23,7 @@ import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -35,10 +37,12 @@ import spring.apo.demotest.dto.response.AuthenticationResponse;
 import spring.apo.demotest.dto.response.IntrospectResponse;
 import spring.apo.demotest.entity.AppUser;
 import spring.apo.demotest.entity.InvalidatedToken;
+import spring.apo.demotest.entity.VerificationCode;
 import spring.apo.demotest.exception.AppException;
 import spring.apo.demotest.exception.ErrorCode;
 import spring.apo.demotest.repository.InvalidateRepository;
 import spring.apo.demotest.repository.UserRepository;
+import spring.apo.demotest.repository.VerificationCodeRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -47,7 +51,8 @@ import spring.apo.demotest.repository.UserRepository;
 public class AuthenticationService {
     UserRepository userRepository;
     InvalidateRepository invalidateRepository;
-
+    VerificationCodeRepository verificationCodeRepository;
+    VerificationService verificationService;
     @NonFinal
     @Value("${jwt.signerKey}")
     protected String SIGNER_KEY;
@@ -59,6 +64,7 @@ public class AuthenticationService {
     @NonFinal
     @Value("${jwt.refresh-duration}")
     protected Long REFRESH_DURATION;
+
 
     public IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException {
         var token = request.getToken();
@@ -77,6 +83,8 @@ public class AuthenticationService {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         boolean isMatch = passwordEncoder.matches(request.getPassword(), user.getPassword());
         if (!isMatch) throw new AppException(ErrorCode.AUTHENTICATION_FAILED);
+        boolean isVerified = user.isVerified();
+        if (!isVerified) throw new AppException(ErrorCode.USER_NOT_VERIFIED);
         var token = generateToken(user);
          return AuthenticationResponse.builder()
                 .token(token)
@@ -112,7 +120,34 @@ public class AuthenticationService {
         var token = generateToken(user);
         return AuthenticationResponse.builder().token(token).authenticated(true).build();
     }
+    @Transactional
+    public String verifyCode(String userId, String code) {
+        AppUser user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        VerificationCode verification = verificationCodeRepository
+            .findByUserIdAndCode(userId, code)
+            .orElseThrow(() -> new AppException(ErrorCode.INVALID_VERIFICATION_CODE));
 
+        if (verification.getExpiresAt().isBefore(LocalDateTime.now())) {
+            throw new AppException(ErrorCode.INVALID_VERIFICATION_CODE_EXPIRED);
+        }
+        
+        user.setVerified(true);  // Thêm cột verified trong user table
+        userRepository.save(user);
+        verificationCodeRepository.deleteByUserId(userId);
+        return "Xác minh tài khoản thành công!";
+    }
+    @Transactional
+    public String restVerificationCode(String userId) {
+        AppUser user = userRepository.findById(userId)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        if (user.isVerified()) {
+            throw new AppException(ErrorCode.USER_ALREADY_VERIFIED);
+        }
+        verificationCodeRepository.deleteByUserId(user.getId());
+        verificationService.createAndSendVerificationCode(user);
+        return "Bạn hãy kiểm tra mail để lấy mã xác minh";
+    }
     
         String generateToken(AppUser user) {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);

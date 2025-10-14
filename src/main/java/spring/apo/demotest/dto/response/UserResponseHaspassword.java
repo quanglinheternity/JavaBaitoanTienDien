@@ -22,6 +22,7 @@ public class UserResponseHaspassword {
     String firstName;
     String lastName;
     LocalDate birthDate;
+    String profileImage;
     String role;
     // nếu muốn trả thêm usage history
     Set<UsageHistoryResponse> usageHistories;

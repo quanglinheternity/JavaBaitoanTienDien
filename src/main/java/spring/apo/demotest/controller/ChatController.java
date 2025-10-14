@@ -15,8 +15,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import spring.apo.demotest.dto.request.ChatRequest;
 import spring.apo.demotest.dto.response.BillItem;
-import spring.apo.demotest.dto.response.ChatFilmInfo;
-import spring.apo.demotest.dto.response.ExpenseInfo;
 import spring.apo.demotest.service.ChatService;
 
 @RestController
@@ -31,7 +29,7 @@ public class ChatController {
         return chatService.chat(request);
     }
     @PostMapping("/image")
-    List<BillItem> chatImage(@RequestParam(value = "image") MultipartFile image, @RequestParam(value = "message") String request){
+    List<BillItem> chatImage(@RequestParam(value = "image", required = false) List<MultipartFile> image, @RequestParam(value = "message") String request){
         return chatService.chatFile(image,request);
     }
 

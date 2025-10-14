@@ -1,9 +1,8 @@
 package spring.apo.demotest.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
@@ -15,18 +14,16 @@ import org.springframework.ai.chat.prompt.ChatOptions;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.content.Media;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import spring.apo.demotest.dto.request.ChatRequest;
 import spring.apo.demotest.dto.response.BillItem;
-// import spring.apo.demotest.dto.response.ChatFilmInfo;
-import spring.apo.demotest.dto.response.ExpenseInfo;
 import spring.apo.demotest.dto.response.TierConfigResponse;
 import spring.apo.demotest.dto.response.UsageHistoryResponse;
 import spring.apo.demotest.entity.TierConfig;
@@ -34,9 +31,7 @@ import spring.apo.demotest.entity.UsageHistory;
 import spring.apo.demotest.mapper.TierConfigMapper;
 import spring.apo.demotest.mapper.UsageHistoryMapper;
 import spring.apo.demotest.repository.TierConfigRepository;
-import spring.apo.demotest.repository.UsageHistroryRepository;
 
-@RequiredArgsConstructor
 @Service
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
@@ -108,17 +103,40 @@ public class ChatService {
                 .call()
                 .content();
     }
-    public List<BillItem> chatFile(MultipartFile image, String request){
+    @SuppressWarnings("null")
+    public List<BillItem> chatFile(List<MultipartFile> images, String request){
         try {
-            Media media = Media.builder()
-                    .mimeType(MimeTypeUtils.parseMimeType(image.getContentType()))
-                    .data(image.getBytes())
-                    .build();
+            String conversationId = "conversation2";
+            
             ChatOptions options = ChatOptions.builder()
                     .temperature(0D)
                     .build();   
-                
-            ;
+            if (images == null || images.isEmpty()) {
+                log.info("Không có ảnh, xử lý tin nhắn text: {}", request);
+
+                return chatClient.prompt()
+                        .advisors(advisors -> advisors.param(ChatMemory.CONVERSATION_ID, conversationId))
+                        .options(options)
+                        .system("You are Quang Linh's assistant and your name is Quinix.")
+                        .user(request)
+                        .call()
+                        .entity(new ParameterizedTypeReference<List<BillItem>>() {});
+            }  
+            // Media media = Media.builder()
+            //         .mimeType(MimeTypeUtils.parseMimeType(image.getContentType()))
+            //         .data(image.getBytes())
+            //         .build();
+             // 🧩 Có ảnh → chuyển tất cả thành Media
+            List<Media> medias = new ArrayList<>();
+            for (MultipartFile image : images) {
+                if (image != null && !image.isEmpty()) {
+                    Media media = Media.builder()
+                            .mimeType(MimeTypeUtils.parseMimeType(image.getContentType()))
+                            .data(image.getBytes())
+                            .build();
+                    medias.add(media);
+                }
+            }
 
             // return chatClient.prompt()
             //         .options(options)
@@ -129,16 +147,26 @@ public class ChatService {
             //         .call()
             //         .content();
             return chatClient.prompt()
+                    .advisors(advisors -> advisors.param(ChatMemory.CONVERSATION_ID, conversationId))
                     .options(options)
                     .system("You are Quang Linh's assistant and your name is Quinix.")
-                    .user(user -> user
-                            .media(media)
-                            .text(request))
+                    .user(user -> {
+                    // Gắn nhiều ảnh (gọi media() nhiều lần)
+                        for (Media m : medias) {
+                            user.media(m);
+                        }
+                        user.text(request);
+                    })
                     .call()
                     .entity(new ParameterizedTypeReference<List<BillItem>>() {});
 
         } catch (IOException e) {
             throw new RuntimeException("Lỗi khi đọc file ảnh: " + e.getMessage(), e);
         }
+    }
+    @Scheduled(fixedRate = 6000)
+    public void clearOldChatHistory() {
+        chatMemoryRepository.deleteByConversationId("conversation2");
+        log.info("Chat history cleared");
     }
 }

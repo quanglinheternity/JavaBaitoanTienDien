@@ -24,6 +24,7 @@ public interface UserMapper {
     @Mapping(target = "role", constant = "USER")
     @Mapping(target = "deleted", ignore = true)
     @Mapping(target = "deletedAt", ignore = true)
+    @Mapping(target = "verified", ignore = true)
     AppUser toUser(UserCreateRequest request);  
 
     @Mapping(target = "id", ignore = true)
@@ -32,6 +33,7 @@ public interface UserMapper {
     @Mapping(target = "username", ignore = true)
     @Mapping(target = "deleted", ignore = true)
     @Mapping(target = "deletedAt", ignore = true)
+    @Mapping(target = "verified", ignore = true)
     void updateAppUserFromRequest(UserUpdateRequest request, @MappingTarget AppUser user);
 
     

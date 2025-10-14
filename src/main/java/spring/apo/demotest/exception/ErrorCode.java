@@ -15,6 +15,10 @@ public enum ErrorCode {
     AUTHENTICATION_REQUIRED(2002, "Bạn chưa đăng nhập", HttpStatus.UNAUTHORIZED),
     TOKEN_EXPIRED(2003, "Token đã hết hạn", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(2004, "Bạn không có quyền truy cập", HttpStatus.FORBIDDEN),
+    INVALID_VERIFICATION_CODE(1014, "Số xác minh không hợp lệ", HttpStatus.BAD_REQUEST),
+    INVALID_VERIFICATION_CODE_EXPIRED(1015, "Số xác minh hết hạn", HttpStatus.BAD_REQUEST),
+    USER_ALREADY_VERIFIED(1016, "Người dùng đã được xác minh", HttpStatus.BAD_REQUEST),
+    USER_NOT_VERIFIED(1017, "Người dùng chưa được xác minh", HttpStatus.BAD_REQUEST),
 
     USAGE_ALREADY_EXISTS(1100, "Người đùng đã có số tiền trong tháng", HttpStatus.BAD_REQUEST),
     USER_ALREADY_DELETED(1100, "Người dùng được xóa", HttpStatus.BAD_REQUEST),

@@ -3,9 +3,11 @@ package spring.apo.demotest;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableAsync;
+// import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @EnableAsync
+// @EnableScheduling
 public class DemotestApplication {
 
 	public static void main(String[] args) {

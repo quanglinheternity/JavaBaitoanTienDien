@@ -9,6 +9,10 @@ spring:
     username: root
     password: 
     driver-class-name: com.mysql.cj.jdbc.Driver
+  servlet:
+    multipart:
+      max-file-size: 64MB
+      max-request-size: 64MB
   mail:
     host: smtp.gmail.com
     port: 587
@@ -31,7 +35,7 @@ spring:
     # database-platform: org.hibernate.dialect.MySQL8Dialect
   ai:
     openai:
-      api-key: API_KEY
+      api-key: AIzaSyCWas065xHWpQs3o643GB85EtZb3t_ib_s
       base-url: https://generativelanguage.googleapis.com/v1beta/openai/
       chat:
         options:
@@ -42,7 +46,8 @@ spring:
           jdbc:
             initialize-schema: always
 
-
+image:
+  upload-dir: D:\hocJava\demotest\upload
 
 jwt:
   signerKey: bvkfSG5tgcc6kHcMWz6VpgyEjCmg16w8EzZv5mPs3KT4Tt1lS3AhkkOBE3oabTJ8

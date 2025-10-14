@@ -26,7 +26,7 @@ import org.springframework.web.filter.CorsFilter;
 @EnableMethodSecurity
 public class SecurityConfig {
     private final String[] PUBLIC_ENDPOINTS_POST = {
-        "/user", "/auth/login", "/auth/introspect", "/auth/logout", "/auth/refresh"
+        "/user", "/auth/login", "/auth/introspect", "/auth/logout", "/auth/refresh","/auth/{userId}/verify", "/auth/{userId}/resend"
     };
 
     @Autowired
@@ -51,7 +51,6 @@ public class SecurityConfig {
         
         .csrf(AbstractHttpConfigurer::disable)
         .cors(Customizer.withDefaults());
-
         return httpSecurity.build();
     }
 
