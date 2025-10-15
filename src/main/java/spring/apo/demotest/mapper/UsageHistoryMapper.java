@@ -10,5 +10,6 @@ import spring.apo.demotest.entity.UsageHistory;
 @Mapper(componentModel = "spring")
 public interface UsageHistoryMapper {
     UsageHistoryResponse toResponse(UsageHistory usageHistory);
+
     List<UsageHistoryResponse> toResponses(List<UsageHistory> usageHistories);
 }

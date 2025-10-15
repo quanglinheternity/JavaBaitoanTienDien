@@ -20,5 +20,4 @@ public class TierConfigResponse {
     Integer minValue;
     Integer maxValue;
     BigDecimal price;
-
 }

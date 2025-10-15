@@ -1,5 +1,7 @@
 package spring.apo.demotest.service;
 
+import jakarta.mail.internet.MimeMessage;
+
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -7,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
-import jakarta.mail.internet.MimeMessage;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -50,6 +51,7 @@ public class EmailService {
             throw new RuntimeException("Gửi email thất bại");
         }
     }
+
     @Async
     public void sendEmailAsync(EmailRequest request) {
         sendSimpleEmail(request.getTo(), request.getName(), request.getCode());

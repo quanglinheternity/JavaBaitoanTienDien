@@ -12,6 +12,8 @@ import spring.apo.demotest.entity.UsageHistory;
 @Repository
 public interface UsageHistroryRepository extends JpaRepository<UsageHistory, Long> {
     List<UsageHistory> findAllByUserId(String userId);
+
     boolean existsByUserAndUsageDateBetween(AppUser user, LocalDate start, LocalDate end);
+
     List<UsageHistory> findByUserAndUsageDateBetween(AppUser user, LocalDate start, LocalDate end);
 }

@@ -3,6 +3,8 @@ package spring.apo.demotest.controller;
 import java.io.IOException;
 import java.util.List;
 
+import jakarta.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -35,46 +36,45 @@ import spring.apo.demotest.service.UserService;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class UserController {
-     UserService userService;
+    UserService userService;
 
     @PostMapping(consumes = "multipart/form-data")
-    ApiResponse<UserResponseHaspassword> createUser(@ModelAttribute @Valid UserCreateRequest request,  @RequestPart(value = "avatar", required = false) MultipartFile avatar) throws IOException {
+    ApiResponse<UserResponseHaspassword> createUser(
+            @ModelAttribute @Valid UserCreateRequest request,
+            @RequestPart(value = "avatar", required = false) MultipartFile avatar)
+            throws IOException {
         log.info("Inside createUser");
         UserResponseHaspassword user = userService.createdUser(request, avatar);
-        return ApiResponse.<UserResponseHaspassword>builder()
-                .data(user)
-                .build();
+        return ApiResponse.<UserResponseHaspassword>builder().data(user).build();
     }
+
     @GetMapping("{id}")
     @PreAuthorize("hasRole('ADMIN') || #id == principal.id")
     ApiResponse<UserResponse> getUser(@PathVariable("id") String id) {
         log.info("Inside getUser");
-        return ApiResponse.<UserResponse>builder()
-                .data(userService.getUser(id))
-                .build();
+        return ApiResponse.<UserResponse>builder().data(userService.getUser(id)).build();
     }
+
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<UserResponseHaspassword> updateUser(
             @PathVariable("id") String id,
             @ModelAttribute @Valid UserUpdateRequest request,
-            @RequestParam(value = "avatar", required = false) MultipartFile avatar) throws IOException {
+            @RequestParam(value = "avatar", required = false) MultipartFile avatar)
+            throws IOException {
 
         log.info("Inside updateUser");
 
         UserResponseHaspassword updatedUser = userService.updateUser(id, request, avatar);
 
-        return ApiResponse.<UserResponseHaspassword>builder()
-                .data(updatedUser)
-                .build();
-
+        return ApiResponse.<UserResponseHaspassword>builder().data(updatedUser).build();
     }
+
     @GetMapping("/myInfo")
     ApiResponse<UserResponse> getMyInfo() {
-        return ApiResponse.<UserResponse>builder()
-                .data(userService.getMyInfo())
-                .build();
+        return ApiResponse.<UserResponse>builder().data(userService.getMyInfo()).build();
     }
+
     @GetMapping
     public ApiResponse<List<UserResponse>> getAllUsers() {
         log.info("Inside getAllUsers");
@@ -82,12 +82,14 @@ public class UserController {
                 .data(userService.getAllUsers())
                 .build();
     }
+
     @GetMapping("/deleted")
     public ApiResponse<List<UserResponse>> getAllUserByDeleted() {
         return ApiResponse.<List<UserResponse>>builder()
                 .data(userService.getAllUsersByDeleted())
                 .build();
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<String>> delete(@PathVariable String id) {
         userService.delete(id);
@@ -97,6 +99,7 @@ public class UserController {
                 .build();
         return ResponseEntity.ok(response);
     }
+
     @PutMapping("/{id}/restore")
     public ResponseEntity<ApiResponse<String>> restoreUser(@PathVariable String id) {
         userService.restoreUser(id);
@@ -106,5 +109,4 @@ public class UserController {
                 .build();
         return ResponseEntity.ok(response);
     }
-
 }

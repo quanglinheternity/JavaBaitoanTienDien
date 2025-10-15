@@ -18,16 +18,17 @@ import spring.apo.demotest.dto.response.ApiResponse;
 @ControllerAdvice
 @Slf4j
 public class GlobalException {
-    @ExceptionHandler(value  = RuntimeException.class)
+    @ExceptionHandler(value = RuntimeException.class)
     ResponseEntity<ApiResponse<Void>> handleRuntimeException(RuntimeException e) {
         log.error("error", e);
         ErrorCode errorCode = ErrorCode.UNCATEGORIZED_ERROR;
         ApiResponse<Void> response = ApiResponse.<Void>builder()
-                    .code(errorCode.getCode())
-                    .message(errorCode.getMessage())
-                    .build();
+                .code(errorCode.getCode())
+                .message(errorCode.getMessage())
+                .build();
         return ResponseEntity.badRequest().body(response);
     }
+
     @ExceptionHandler(AuthorizationDeniedException.class)
     public ResponseEntity<ApiResponse<?>> handleAuthorizationDeniedException(AuthorizationDeniedException ex) {
         ApiResponse<?> response = ApiResponse.builder()
@@ -36,16 +37,18 @@ public class GlobalException {
                 .build();
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
     }
-    @ExceptionHandler(value  = AppException.class)
+
+    @ExceptionHandler(value = AppException.class)
     ResponseEntity<ApiResponse<Void>> handleAppException(AppException appException) {
         ErrorCode errorCode = appException.getErrorCode();
         ApiResponse<Void> response = ApiResponse.<Void>builder()
-                    .code(errorCode.getCode())
-                    .message(errorCode.getMessage())
-                    .build();
+                .code(errorCode.getCode())
+                .message(errorCode.getMessage())
+                .build();
         return ResponseEntity.status(errorCode.getHttpStatusCode()).body(response);
     }
-   @ExceptionHandler(MethodArgumentNotValidException.class)
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<Object>> handleValidationException(MethodArgumentNotValidException exception) {
         List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
 
@@ -63,24 +66,20 @@ public class GlobalException {
 
         // Trả về danh sách lỗi
         Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("errors", errors.stream()
-                .map(err -> Map.of(
-                        "code", err.getCode(),
-                        "message", err.getMessage()
-                ))
-                .toList()
-        );
+        errorResponse.put(
+                "errors",
+                errors.stream()
+                        .map(err -> Map.of(
+                                "code", err.getCode(),
+                                "message", err.getMessage()))
+                        .toList());
 
         ApiResponse<Object> apiResponse = ApiResponse.<Object>builder()
                 .code(ErrorCode.INVALID_REQUEST.getCode())
                 .message(ErrorCode.INVALID_REQUEST.getMessage())
                 .data(errorResponse)
                 .build();
-       
 
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(apiResponse);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
     }
-
 }

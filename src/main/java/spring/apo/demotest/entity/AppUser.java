@@ -5,13 +5,6 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.hibernate.annotations.Filter;
-import org.hibernate.annotations.FilterDef;
-import org.hibernate.annotations.ParamDef;
-import org.hibernate.annotations.SQLDelete;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,6 +14,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
+import org.hibernate.annotations.SQLDelete;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,22 +45,28 @@ public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
+
     @Column(name = "username", unique = true, columnDefinition = "varchar(255) COLLATE utf8mb4_unicode_ci")
     String username;
+
     String password;
     String firstName;
     String lastName;
     LocalDate birthDate;
     String profileImage;
     String role;
+
     @Builder.Default
     @Column(nullable = false)
     boolean verified = false;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
-    @Builder.Default  // Thêm dòng này
+    @Builder.Default // Thêm dòng này
     Set<UsageHistory> usageHistories = new HashSet<>();
+
     @Builder.Default
     boolean deleted = false;
+
     LocalDateTime deletedAt;
 }

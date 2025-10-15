@@ -9,8 +9,8 @@ import lombok.Getter;
 public enum ErrorCode {
     UNCATEGORIZED_ERROR(9999, "Lỗi không xác định", HttpStatus.INTERNAL_SERVER_ERROR),
     INVALID_ID_KEY(1001, "ID không hợp lệ", HttpStatus.BAD_REQUEST),
-    
-        // Authentication
+
+    // Authentication
     AUTHENTICATION_FAILED(2001, "Sai tài khoản hoặc mật khẩu", HttpStatus.UNAUTHORIZED),
     AUTHENTICATION_REQUIRED(2002, "Bạn chưa đăng nhập", HttpStatus.UNAUTHORIZED),
     TOKEN_EXPIRED(2003, "Token đã hết hạn", HttpStatus.UNAUTHORIZED),
@@ -29,7 +29,7 @@ public enum ErrorCode {
     USER_USERNAME_NOT_FOUND(1105, "Tên đăng không được để trống", HttpStatus.BAD_REQUEST),
     USER_NOT_FOUND(1104, "Người dùng không tồn tại", HttpStatus.NOT_FOUND),
 
-     // 400 - Bad Request
+    // 400 - Bad Request
     INVALID_REQUEST(1000, "Request không hợp lệ", HttpStatus.BAD_REQUEST),
     TIER_CONFIG_NAME_UNIQUE(1001, "Tên tier không được trùng", HttpStatus.BAD_REQUEST),
     TIER_CONFIG_NAME_NOT_FOUND(1001, "Tên tier không được để trống", HttpStatus.BAD_REQUEST),
@@ -50,10 +50,10 @@ public enum ErrorCode {
     private int code;
     private String message;
     private HttpStatusCode httpStatusCode;
-    ErrorCode(int code, String message , HttpStatusCode httpStatusCode) {
+
+    ErrorCode(int code, String message, HttpStatusCode httpStatusCode) {
         this.code = code;
         this.message = message;
         this.httpStatusCode = httpStatusCode;
     }
-
 }

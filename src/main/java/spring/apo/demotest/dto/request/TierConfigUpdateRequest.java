@@ -2,10 +2,10 @@ package spring.apo.demotest.dto.request;
 
 import java.math.BigDecimal;
 
-import jakarta.validation.constraints.NotNull;
-
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,8 +21,7 @@ import spring.apo.demotest.validation.ValidTierRange;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @ValidTierRange(message = "TIER_CONFIG_MAX_VALUE_INVALID")
 public class TierConfigUpdateRequest {
-    
-    
+
     @NotNull(message = "TIER_CONFIG_MIN_VALUE_REQUIRED")
     @Min(value = 0, message = "TIER_CONFIG_MIN_VALUE_INVALID")
     private Integer minValue;
@@ -34,5 +33,4 @@ public class TierConfigUpdateRequest {
     @NotNull(message = "TIER_CONFIG_PRICE_REQUIRED")
     @DecimalMin(value = "0.0", inclusive = false, message = "TIER_CONFIG_PRICE_INVALID")
     private BigDecimal price;
-
 }

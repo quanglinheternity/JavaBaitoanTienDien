@@ -18,7 +18,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-
 // import com.devteria.demo_spring_boot.enums.Role;
 
 @Configuration
@@ -26,7 +25,13 @@ import org.springframework.web.filter.CorsFilter;
 @EnableMethodSecurity
 public class SecurityConfig {
     private final String[] PUBLIC_ENDPOINTS_POST = {
-        "/user", "/auth/login", "/auth/introspect", "/auth/logout", "/auth/refresh","/auth/{userId}/verify", "/auth/{userId}/resend"
+        "/user",
+        "/auth/login",
+        "/auth/introspect",
+        "/auth/logout",
+        "/auth/refresh",
+        "/auth/{userId}/verify",
+        "/auth/{userId}/resend"
     };
 
     @Autowired
@@ -34,23 +39,21 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-         httpSecurity
-        .authorizeHttpRequests(request -> request
-            .requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS_POST).permitAll()
-            // .requestMatchers(HttpMethod.GET, "/user").hasAnyAuthority(Role.ADMIN.name())
-            // .requestMatchers(HttpMethod.PUT, "/user/{userId}").permitAll()
-            .anyRequest().authenticated()
-        )
-        .oauth2ResourceServer(uauth2 -> uauth2
-            .jwt(jwtConfigurer -> jwtConfigurer
-                .decoder(jwtDecoder)
-                .jwtAuthenticationConverter(jwtAuthenticationConverter())
-            )
-            .authenticationEntryPoint(new JwtAuthenticationEntryPoint()) // xử lý auth lỗi
-        )
-        
-        .csrf(AbstractHttpConfigurer::disable)
-        .cors(Customizer.withDefaults());
+        httpSecurity
+                .authorizeHttpRequests(request -> request.requestMatchers(HttpMethod.POST, PUBLIC_ENDPOINTS_POST)
+                        .permitAll()
+                        // .requestMatchers(HttpMethod.GET, "/user").hasAnyAuthority(Role.ADMIN.name())
+                        // .requestMatchers(HttpMethod.PUT, "/user/{userId}").permitAll()
+                        .anyRequest()
+                        .authenticated())
+                .oauth2ResourceServer(
+                        uauth2 -> uauth2.jwt(jwtConfigurer -> jwtConfigurer
+                                        .decoder(jwtDecoder)
+                                        .jwtAuthenticationConverter(jwtAuthenticationConverter()))
+                                .authenticationEntryPoint(new JwtAuthenticationEntryPoint()) // xử lý auth lỗi
+                        )
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(Customizer.withDefaults());
         return httpSecurity.build();
     }
 
@@ -67,6 +70,7 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", corsConfiguration);
         return new CorsFilter(source);
     }
+
     @Bean
     JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();

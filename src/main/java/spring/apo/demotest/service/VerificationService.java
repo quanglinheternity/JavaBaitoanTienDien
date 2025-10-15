@@ -14,16 +14,17 @@ import spring.apo.demotest.repository.VerificationCodeRepository;
 public class VerificationService {
     private final VerificationCodeRepository verificationCodeRepository;
     private final EmailService emailService;
+
     public void createAndSendVerificationCode(AppUser savedUser) {
-            String verificationCode = String.valueOf((int)(Math.random() * 900000) + 100000);
-             // ⏰ Hạn 10 phút
-            LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(10);
-            VerificationCode codeEntity = new VerificationCode();
-            codeEntity.setUserId(savedUser.getId());
-            codeEntity.setCode(verificationCode);
-            codeEntity.setCreatedAt(LocalDateTime.now());
-            codeEntity.setExpiresAt(expiresAt);
-            verificationCodeRepository.save(codeEntity);
-            emailService.sendSimpleEmail(savedUser.getUsername(), savedUser.getLastName(), verificationCode);
+        String verificationCode = String.valueOf((int) (Math.random() * 900000) + 100000);
+        // ⏰ Hạn 10 phút
+        LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(10);
+        VerificationCode codeEntity = new VerificationCode();
+        codeEntity.setUserId(savedUser.getId());
+        codeEntity.setCode(verificationCode);
+        codeEntity.setCreatedAt(LocalDateTime.now());
+        codeEntity.setExpiresAt(expiresAt);
+        verificationCodeRepository.save(codeEntity);
+        emailService.sendSimpleEmail(savedUser.getUsername(), savedUser.getLastName(), verificationCode);
     }
 }

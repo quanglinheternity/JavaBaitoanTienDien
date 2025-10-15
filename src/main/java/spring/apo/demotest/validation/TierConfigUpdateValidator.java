@@ -2,6 +2,7 @@ package spring.apo.demotest.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+
 import spring.apo.demotest.dto.request.TierConfigUpdateRequest;
 
 public class TierConfigUpdateValidator implements ConstraintValidator<ValidTierRange, TierConfigUpdateRequest> {
@@ -14,11 +15,10 @@ public class TierConfigUpdateValidator implements ConstraintValidator<ValidTierR
         if (request.getMaxValue() <= request.getMinValue()) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("TIER_CONFIG_MAX_VALUE_INVALID")
-                   .addPropertyNode("maxValue")
-                   .addConstraintViolation();
+                    .addPropertyNode("maxValue")
+                    .addConstraintViolation();
             return false;
         }
         return true;
     }
 }
-    

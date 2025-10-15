@@ -31,11 +31,11 @@ spring:
     # properties:
     #   hibernate:
     #     format_sql: true # format SQL cho dễ đọc
-    # open-in-view: false  # tránh warning + tốt cho REST API
+    open-in-view: false  # tránh warning + tốt cho REST API
     # database-platform: org.hibernate.dialect.MySQL8Dialect
   ai:
     openai:
-      api-key: API_KEY
+      api-key: 
       base-url: https://generativelanguage.googleapis.com/v1beta/openai/
       chat:
         options:

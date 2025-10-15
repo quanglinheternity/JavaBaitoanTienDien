@@ -11,5 +11,6 @@ import spring.apo.demotest.entity.TierConfig;
 @Repository
 public interface TierConfigRepository extends JpaRepository<TierConfig, Integer> {
     List<TierConfig> findAllByOrderByMinValueAsc();
+
     List<TierConfigResponse> findByTierName(String getMessage);
 }

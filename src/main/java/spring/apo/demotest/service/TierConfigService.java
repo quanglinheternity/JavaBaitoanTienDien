@@ -23,37 +23,41 @@ import spring.apo.demotest.repository.TierConfigRepository;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
-@PreAuthorize("hasRole('ADMIN')") 
+@PreAuthorize("hasRole('ADMIN')")
 public class TierConfigService {
-    
+
     TierConfigRepository tierConfigRepository;
     TierConfigMapper tierConfigMapper;
+
     public TierConfigResponse createTierConfig(TierConfigCreateRequest request) {
         TierConfig tierConfig = tierConfigMapper.toTierConfig(request);
-        
-       
-         try {
-             TierConfig savedTierConfig = tierConfigRepository.save(tierConfig);
+
+        try {
+            TierConfig savedTierConfig = tierConfigRepository.save(tierConfig);
             return tierConfigMapper.toTierConfigResponse(savedTierConfig);
 
         } catch (DataIntegrityViolationException e) {
             throw new AppException(ErrorCode.TIER_CONFIG_NAME_UNIQUE);
         }
-        
     }
+
     public List<TierConfig> getAllTierConfig() {
         return tierConfigRepository.findAllByOrderByMinValueAsc();
     }
+
     public boolean deleteTierConfig(int id) {
         if (!tierConfigRepository.existsById(id)) return false;
         tierConfigRepository.deleteById(id);
         return true;
     }
+
     public TierConfig getTierConfig(int id) {
-        return tierConfigRepository.findById(id).orElseThrow(()-> new AppException(ErrorCode.INVALID_ID_KEY));
+        return tierConfigRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.INVALID_ID_KEY));
     }
+
     public TierConfigResponse updateTierConfig(int id, TierConfigUpdateRequest request) {
-        TierConfig tierConfig = tierConfigRepository.findById(id).orElseThrow(()-> new AppException(ErrorCode.INVALID_ID_KEY));
+        TierConfig tierConfig =
+                tierConfigRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.INVALID_ID_KEY));
         log.info("Before save: {}", tierConfig);
 
         tierConfigMapper.updateTierConfig(tierConfig, request);

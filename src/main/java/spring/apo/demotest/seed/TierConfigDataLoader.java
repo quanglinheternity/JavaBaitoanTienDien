@@ -1,12 +1,13 @@
 package spring.apo.demotest.seed;
 
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
-import spring.apo.demotest.entity.TierConfig;
-import spring.apo.demotest.repository.TierConfigRepository;
-
 import java.math.BigDecimal;
 import java.util.List;
+
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+
+import spring.apo.demotest.entity.TierConfig;
+import spring.apo.demotest.repository.TierConfigRepository;
 
 @Component
 public class TierConfigDataLoader implements CommandLineRunner {
@@ -27,11 +28,12 @@ public class TierConfigDataLoader implements CommandLineRunner {
                     createTier("Bậc 4", 201, 300, new BigDecimal("2700")),
                     createTier("Bậc 5", 301, 400, new BigDecimal("2900")),
                     createTier("Bậc 6", 401, null, new BigDecimal("3200")) // null = không giới hạn max
-            );
+                    );
             tierConfigRepository.saveAll(tiers);
             System.out.println("✅ Đã seed dữ liệu mẫu cho bảng TierConfig");
         }
     }
+
     private TierConfig createTier(String name, Integer min, Integer max, BigDecimal price) {
         TierConfig tier = new TierConfig();
         tier.setTierName(name);

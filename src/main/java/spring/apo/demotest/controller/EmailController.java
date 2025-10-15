@@ -19,12 +19,13 @@ import spring.apo.demotest.service.EmailService;
 @Slf4j
 public class EmailController {
     EmailService emailService;
+
     @PostMapping("/send")
     public String sendAdvancedEmail(@RequestBody EmailRequest request) {
         try {
             // emailService.sendSimpleEmail(
-            //     request.getTo(), 
-            //     request.getSubject(), 
+            //     request.getTo(),
+            //     request.getSubject(),
             //     request.getMessage()
             // );
             emailService.sendEmailAsync(request);

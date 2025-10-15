@@ -31,19 +31,20 @@ import spring.apo.demotest.service.AuthenticationService;
 @Slf4j
 public class AuthenticationController {
     AuthenticationService authenticationService;
+
     @PostMapping("/login")
     public ApiResponse<AuthenticationResponse> login(@RequestBody AuthenticationRequest request) {
         AuthenticationResponse result = authenticationService.authenticate(request);
-        return ApiResponse.<AuthenticationResponse>builder()
-                    .data(result)
-                    .build();
+        return ApiResponse.<AuthenticationResponse>builder().data(result).build();
     }
+
     @PostMapping("/introspect")
     ApiResponse<IntrospectResponse> authticated(@RequestBody IntrospectRequest request)
             throws ParseException, JOSEException {
         var result = authenticationService.introspect(request);
         return ApiResponse.<IntrospectResponse>builder().data(result).build();
     }
+
     @PostMapping("/refresh")
     ApiResponse<AuthenticationResponse> authticated(@RequestBody RefreshRequest request)
             throws ParseException, JOSEException {
@@ -56,15 +57,16 @@ public class AuthenticationController {
         authenticationService.logOut(request);
         return ApiResponse.<Void>builder().message("Đăng xuất thành công").build();
     }
+
     @PostMapping("{userId}/verify")
     ApiResponse<Void> verifyCode(@PathVariable(value = "userId") String userId, @RequestParam String code) {
         String result = authenticationService.verifyCode(userId, code);
         return ApiResponse.<Void>builder().code(1000).message(result).build();
     }
+
     @PostMapping("{userId}/resend")
     ApiResponse<Void> resendCode(@PathVariable(value = "userId") String userId) {
         String result = authenticationService.restVerificationCode(userId);
         return ApiResponse.<Void>builder().code(1000).message(result).build();
     }
-
-}   
+}

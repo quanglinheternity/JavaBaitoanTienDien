@@ -19,11 +19,11 @@ public interface TierConfigMapper {
     TierConfig toTierConfig(TierConfigCreateRequest request);
 
     TierConfigResponse toTierConfigResponse(TierConfig tierConfig);
-    
+
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "tierName", ignore = true)
-    void updateTierConfig(@MappingTarget TierConfig target,  TierConfigUpdateRequest request);
+    void updateTierConfig(@MappingTarget TierConfig target, TierConfigUpdateRequest request);
 
     List<TierConfigResponse> toResponseList(List<TierConfig> tierConfigs);
 }

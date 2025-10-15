@@ -1,22 +1,23 @@
 package spring.apo.demotest.configuration;
+
 import java.io.IOException;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import spring.apo.demotest.dto.response.ApiResponse;
-import spring.apo.demotest.exception.ErrorCode;
 
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import spring.apo.demotest.dto.response.ApiResponse;
+import spring.apo.demotest.exception.ErrorCode;
 
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
-    @Override //ghi đè
+    @Override // ghi đè
     public void commence(
             HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
             throws IOException, ServletException {

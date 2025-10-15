@@ -25,12 +25,11 @@ public class TierConfig {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
-    
+
     @Column(name = "tier_name", unique = true, columnDefinition = "varchar(255) COLLATE utf8mb4_unicode_ci")
     String tierName;
+
     Integer minValue;
     Integer maxValue;
     BigDecimal price;
-
-    
 }

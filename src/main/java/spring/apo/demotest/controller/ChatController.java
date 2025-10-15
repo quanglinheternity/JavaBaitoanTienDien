@@ -24,13 +24,16 @@ import spring.apo.demotest.service.ChatService;
 @Slf4j
 public class ChatController {
     ChatService chatService;
+
     @PostMapping
-    String chat(@RequestBody ChatRequest request){
+    String chat(@RequestBody ChatRequest request) {
         return chatService.chat(request);
     }
-    @PostMapping("/image")
-    List<BillItem> chatImage(@RequestParam(value = "image", required = false) List<MultipartFile> image, @RequestParam(value = "message") String request){
-        return chatService.chatFile(image,request);
-    }
 
+    @PostMapping("/image")
+    List<BillItem> chatImage(
+            @RequestParam(value = "image", required = false) List<MultipartFile> image,
+            @RequestParam(value = "message") String request) {
+        return chatService.chatFile(image, request);
+    }
 }
