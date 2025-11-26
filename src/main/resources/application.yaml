@@ -36,7 +36,7 @@ spring:
     # database-platform: org.hibernate.dialect.MySQL8Dialect
   ai:
     openai:
-      api-key: AIzaSyAQnuxDniW_Y1d1zf7f0DaDBwDH2oYDiVE
+      api-key:
       base-url: https://generativelanguage.googleapis.com/v1beta/openai/
       chat:
         options:
