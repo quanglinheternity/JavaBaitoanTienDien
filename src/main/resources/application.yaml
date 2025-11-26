@@ -13,6 +13,7 @@ spring:
     multipart:
       max-file-size: 64MB
       max-request-size: 64MB
+  # allow-bean-definition-overriding: true
   mail:
     host: smtp.gmail.com
     port: 587
@@ -31,11 +32,11 @@ spring:
     # properties:
     #   hibernate:
     #     format_sql: true # format SQL cho dễ đọc
-    open-in-view: false  # tránh warning + tốt cho REST API
+    # open-in-view: false  # tránh warning + tốt cho REST API
     # database-platform: org.hibernate.dialect.MySQL8Dialect
   ai:
     openai:
-      api-key: 
+      api-key: AIzaSyAQnuxDniW_Y1d1zf7f0DaDBwDH2oYDiVE
       base-url: https://generativelanguage.googleapis.com/v1beta/openai/
       chat:
         options:

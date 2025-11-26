@@ -67,9 +67,9 @@ public class ChatService {
 
     public String chat(ChatRequest request) {
         String conversationId = "conversation2";
-        List<UsageHistory> histories = usageHistoryService.getMyUsageHistories();
+//        List<UsageHistory> histories = usageHistoryService.getMyUsageHistories();
 
-        List<UsageHistoryResponse> usageData = usageHistoryMapper.toResponses(histories);
+//        List<UsageHistoryResponse> usageData = usageHistoryMapper.toResponses(histories);
 
         List<TierConfig> entities = tierConfigRepository.findAll();
 
@@ -77,7 +77,7 @@ public class ChatService {
 
         StringBuilder sb = new StringBuilder();
         sb.append("You are Quang Linh's assistant and your name is Quinix.\n");
-        sb.append("You should respond with a short, professional answer.\n\n");
+        sb.append("You should answer humorously.\n\n");
 
         sb.append("Tier Configurations:\n");
         for (TierConfigResponse p : tierData) {
@@ -94,17 +94,17 @@ public class ChatService {
 
         sb.append("\n");
 
-        sb.append("Electricity Usage History:\n");
-        for (UsageHistoryResponse u : usageData) {
-            sb.append("- ")
-                    .append(u.getUsageDate())
-                    .append(": ")
-                    .append(u.getKwh())
-                    .append(" kWh")
-                    .append(", Total=")
-                    .append(u.getAmount())
-                    .append("\n");
-        }
+//        sb.append("Electricity Usage History:\n");
+//        for (UsageHistoryResponse u : usageData) {
+//            sb.append("- ")
+//                    .append(u.getUsageDate())
+//                    .append(": ")
+//                    .append(u.getKwh())
+//                    .append(" kWh")
+//                    .append(", Total=")
+//                    .append(u.getAmount())
+//                    .append("\n");
+//        }
 
         SystemMessage systemMessage = new SystemMessage(sb.toString());
         UserMessage userMessage = new UserMessage(request.getMessage());
@@ -121,28 +121,89 @@ public class ChatService {
     }
 
     @SuppressWarnings("null")
-    public List<BillItem> chatFile(List<MultipartFile> images, String request) {
+//    public List<BillItem> chatFile(List<MultipartFile> images, String request) {
+//        try {
+//            String conversationId = "conversation2";
+//
+//            ChatOptions options = ChatOptions.builder().temperature(0D).build();
+//            if (images == null || images.isEmpty()) {
+//                log.info("Không có ảnh, xử lý tin nhắn text: {}", request);
+//
+//                return chatClient
+//                        .prompt()
+//                        .advisors(advisors -> advisors.param(ChatMemory.CONVERSATION_ID, conversationId))
+//                        .options(options)
+//                        .system("You are Quang Linh's assistant and your name is Quinix.")
+//                        .user(request)
+//                        .call()
+//                        .entity(new ParameterizedTypeReference<List<BillItem>>() {});
+//            }
+//            // Media media = Media.builder()
+//            //         .mimeType(MimeTypeUtils.parseMimeType(image.getContentType()))
+//            //         .data(image.getBytes())
+//            //         .build();
+//            // 🧩 Có ảnh → chuyển tất cả thành Media
+//            List<Media> medias = new ArrayList<>();
+//            for (MultipartFile image : images) {
+//                if (image != null && !image.isEmpty()) {
+//                    Media media = Media.builder()
+//                            .mimeType(MimeTypeUtils.parseMimeType(image.getContentType()))
+//                            .data(image.getBytes())
+//                            .build();
+//                    medias.add(media);
+//                }
+//            }
+//
+//            // return chatClient.prompt()
+//            //         .options(options)
+//            //         .system("You are Quang Linh's assistant and your name is Quinix.")
+//            //         .user(user -> user
+//            //                 .media(media)
+//            //                 .text(request))
+//            //         .call()
+//            //         .content();
+//            return chatClient
+//                    .prompt()
+//                    .advisors(advisors -> advisors.param(ChatMemory.CONVERSATION_ID, conversationId))
+//                    .options(options)
+//                    .system("You are Quang Linh's assistant and your name is Quinix.")
+//                    .user(user -> {
+//                        // Gắn nhiều ảnh (gọi media() nhiều lần)
+//                        for (Media m : medias) {
+//                            user.media(m);
+//                        }
+//                        user.text(request);
+//                    })
+//                    .call()
+//                    .entity(new ParameterizedTypeReference<List<BillItem>>() {});
+//
+//        } catch (IOException e) {
+//            throw new RuntimeException("Lỗi khi đọc file ảnh: " + e.getMessage(), e);
+//        }
+//    }
+    public String chatFile(List<MultipartFile> images, String request) {
         try {
             String conversationId = "conversation2";
 
-            ChatOptions options = ChatOptions.builder().temperature(0D).build();
+            ChatOptions options = ChatOptions.builder()
+                    .temperature(0D)
+                    .build();
+
+            // ========== Trường hợp không có ảnh ==========
             if (images == null || images.isEmpty()) {
-                log.info("Không có ảnh, xử lý tin nhắn text: {}", request);
+                log.info("Không có ảnh → xử lý text: {}", request);
 
                 return chatClient
                         .prompt()
-                        .advisors(advisors -> advisors.param(ChatMemory.CONVERSATION_ID, conversationId))
+                        .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, conversationId))
                         .options(options)
                         .system("You are Quang Linh's assistant and your name is Quinix.")
                         .user(request)
                         .call()
-                        .entity(new ParameterizedTypeReference<List<BillItem>>() {});
+                        .content(); // ⬅️ TRẢ RA STRING
             }
-            // Media media = Media.builder()
-            //         .mimeType(MimeTypeUtils.parseMimeType(image.getContentType()))
-            //         .data(image.getBytes())
-            //         .build();
-            // 🧩 Có ảnh → chuyển tất cả thành Media
+
+            // ========== Chuyển ảnh thành Media ==========
             List<Media> medias = new ArrayList<>();
             for (MultipartFile image : images) {
                 if (image != null && !image.isEmpty()) {
@@ -154,34 +215,26 @@ public class ChatService {
                 }
             }
 
-            // return chatClient.prompt()
-            //         .options(options)
-            //         .system("You are Quang Linh's assistant and your name is Quinix.")
-            //         .user(user -> user
-            //                 .media(media)
-            //                 .text(request))
-            //         .call()
-            //         .content();
+            // ========== Gửi ảnh + text ==========
             return chatClient
                     .prompt()
-                    .advisors(advisors -> advisors.param(ChatMemory.CONVERSATION_ID, conversationId))
+                    .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, conversationId))
                     .options(options)
                     .system("You are Quang Linh's assistant and your name is Quinix.")
                     .user(user -> {
-                        // Gắn nhiều ảnh (gọi media() nhiều lần)
+                        // Thêm tất cả ảnh vào message
                         for (Media m : medias) {
                             user.media(m);
                         }
                         user.text(request);
                     })
                     .call()
-                    .entity(new ParameterizedTypeReference<List<BillItem>>() {});
+                    .content(); // ⬅️ TRẢ STRING
 
         } catch (IOException e) {
             throw new RuntimeException("Lỗi khi đọc file ảnh: " + e.getMessage(), e);
         }
     }
-
     @Scheduled(fixedRate = 6000)
     public void clearOldChatHistory() {
         chatMemoryRepository.deleteByConversationId("conversation2");

@@ -30,10 +30,10 @@ public class ChatController {
         return chatService.chat(request);
     }
 
-    @PostMapping("/image")
-    List<BillItem> chatImage(
-            @RequestParam(value = "image", required = false) List<MultipartFile> image,
-            @RequestParam(value = "message") String request) {
-        return chatService.chatFile(image, request);
-    }
+//    @PostMapping("/image")
+//    List<BillItem> chatImage(
+//            @RequestParam(value = "image", required = false) List<MultipartFile> image,
+//            @RequestParam(value = "message") String request) {
+//        return chatService.chatFile(image, request);
+//    }
 }

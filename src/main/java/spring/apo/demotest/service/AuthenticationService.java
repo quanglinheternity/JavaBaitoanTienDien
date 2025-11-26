@@ -10,7 +10,6 @@ import java.util.UUID;
 import jakarta.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -55,6 +54,8 @@ public class AuthenticationService {
     VerificationCodeRepository verificationCodeRepository;
     VerificationService verificationService;
 
+    PasswordEncoder passwordEncoder;
+
     @NonFinal
     @Value("${jwt.signerKey}")
     protected String SIGNER_KEY;
@@ -82,7 +83,6 @@ public class AuthenticationService {
         var user = userRepository
                 .findByUsernameAndDeletedFalse(request.getUsername())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         boolean isMatch = passwordEncoder.matches(request.getPassword(), user.getPassword());
         if (!isMatch) throw new AppException(ErrorCode.AUTHENTICATION_FAILED);
         boolean isVerified = user.isVerified();
